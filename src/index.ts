@@ -2,32 +2,34 @@ import { Client, Events, GatewayIntentBits } from 'discord.js'
 import { config } from './config'
 import registerSlashCommands from './register-slash-commands'
 import { handleButtonClick, handleStartCW } from './commands-handlers/start-cw'
+import { handleEndCW } from './commands-handlers/end-cw'
+import { handleListCW, handleListCWButtons } from './commands-handlers/list-cw'
 
 async function initBot() {
   await registerSlashCommands()
 
-  const client = new Client({ intents: [GatewayIntentBits.Guilds] })
+  const client = new Client({
+    intents: [
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.GuildMembers,
+      GatewayIntentBits.GuildVoiceStates,
+      GatewayIntentBits.GuildPresences,
+    ],
+  })
 
   client.on(Events.ClientReady, (readyClient) => {
     console.log(`Logged in as ${readyClient.user.tag}!`)
   })
 
   client.on(Events.InteractionCreate, async (interaction) => {
-    console.log(interaction)
-
     if (interaction.isButton()) {
-      await handleButtonClick(interaction);
-      return;
+      await handleButtonClick(interaction)
+      await handleListCWButtons(interaction)
+      return
     }
 
     if (!interaction.isChatInputCommand()) return
-
-    if (interaction.commandName === 'ping') {
-      console.log(interaction.options.getSubcommand())
-      if (interaction.options.getSubcommand() === 'piska') {
-        await interaction.reply('Pong!')
-      }
-    }
 
     if (interaction.commandName === 'stats') {
       if (interaction.options.getSubcommand() === 'rating') {
@@ -52,11 +54,7 @@ async function initBot() {
 
     if (interaction.commandName === 'cw') {
       if (interaction.options.getSubcommand() === 'start') {
-        const game = interaction.options.getString('game', true)
-
         await handleStartCW(interaction)
-        // await interaction.reply(`Сбор кв ${game}`)
-        console.log('asd')
       }
 
       if (interaction.options.getSubcommand() === 'cancel') {
@@ -66,7 +64,11 @@ async function initBot() {
       }
 
       if (interaction.options.getSubcommand() === 'end') {
-        await interaction.reply(`Конец кв`)
+        await handleEndCW(interaction)
+      }
+
+      if (interaction.options.getSubcommand() === 'list') {
+        await handleListCW(interaction)
       }
     }
   })

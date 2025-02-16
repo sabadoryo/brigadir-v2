@@ -5,39 +5,42 @@ import {
   ButtonStyle,
   ActionRowBuilder,
   Interaction,
+  ChannelType,
 } from 'discord.js'
+import ratings from '../constants/players-rating'
+import activeCWs from '../storage/active-cws'
 
 const MAX_PLAYERS = 2
-const activeCWs = new Map<string, { game: string; players: string[] }>()
 
 async function handleStartCW(interaction: ChatInputCommandInteraction) {
   const game = interaction.options.getString('game', true)
-  const cwId = interaction.channelId
+  const cwName = interaction.options.getString('cwname', true)
 
-  activeCWs.set(cwId, { game, players: [] })
+  activeCWs.set(cwName, { game, players: [] })
 
-  const embed = createCWEmbed(game, [])
+  const embed = createCWEmbed(cwName, game, [])
 
   const joinButton = new ButtonBuilder()
-    .setCustomId(`join_cw_${cwId}`)
+    .setCustomId(`join_cw_${cwName}`)
     .setLabel('Записаться')
     .setStyle(ButtonStyle.Primary)
 
   const leaveButton = new ButtonBuilder()
-    .setCustomId(`leave_cw_${cwId}`)
+    .setCustomId(`leave_cw_${cwName}`)
     .setLabel('Покинуть')
     .setStyle(ButtonStyle.Danger)
 
   const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    joinButton, leaveButton,
+    joinButton,
+    leaveButton,
   )
 
   await interaction.reply({ embeds: [embed], components: [actionRow] })
 }
 
-function createCWEmbed(game: string, players: string[]) {
+function createCWEmbed(cwName: string, game: string, players: string[]) {
   return new EmbedBuilder()
-    .setTitle(`${game.toUpperCase()} - Clan War`)
+    .setTitle(`${cwName}`)
     .setDescription(
       `🛠️ **Сбор на CW в ${game}!**  
       👥 **Игроков в команде:** ${players.length}/${MAX_PLAYERS}`,
@@ -61,17 +64,31 @@ function createCWEmbed(game: string, players: string[]) {
 
 async function handleButtonClick(interaction: Interaction) {
   if (!interaction.isButton()) return
+  let cwName = interaction.message.embeds[0].data.title
 
-  const { customId, user, channelId } = interaction
-  if (!customId.startsWith('join_cw_') && !customId.startsWith('leave_cw_'))
+  if (!cwName) return
+  const { customId, user, guild } = interaction
+  if (
+    !customId.startsWith('join_cw_') &&
+    !customId.startsWith('leave_cw_') &&
+    !customId.startsWith('start_cw_')
+  )
     return
-  if (customId.startsWith('join_cw_')) {
-    const cw = activeCWs.get(channelId)
-    if (!cw)
-      return interaction.reply({ content: 'Сбор не найден.', ephemeral: true })
 
+  const cw = activeCWs.get(cwName)
+  if (!cw)
+    return interaction.reply({ content: 'Сбор не найден.', ephemeral: true })
+
+  if (customId.startsWith('join_cw_')) {
     if (cw.players.includes(user.username)) {
       return interaction.reply({ content: 'Вы уже записаны!', ephemeral: true })
+    }
+
+    if (isUserInAnyCW(user.username)) {
+      return interaction.reply({
+        content: 'Вы уже участвуете в другом CW!',
+        ephemeral: true,
+      })
     }
 
     if (cw.players.length >= MAX_PLAYERS) {
@@ -83,25 +100,122 @@ async function handleButtonClick(interaction: Interaction) {
 
     cw.players.push(user.username)
 
-    const embed = createCWEmbed(cw.game, cw.players)
-    await interaction.update({ embeds: [embed] })
+    let actionRow
+    if (cw.players.length === MAX_PLAYERS) {
+      const startButton = new ButtonBuilder()
+        .setCustomId(`start_cw_${cwName}`)
+        .setLabel('Начать CW')
+        .setStyle(ButtonStyle.Success)
+      const leaveButton = new ButtonBuilder()
+        .setCustomId(`leave_cw_${cwName}`)
+        .setLabel('Покинуть')
+        .setStyle(ButtonStyle.Danger)
+
+      actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        startButton,
+        leaveButton,
+      )
+    } else {
+      const joinButton = new ButtonBuilder()
+        .setCustomId(`join_cw_${cwName}`)
+        .setLabel('Записаться')
+        .setStyle(ButtonStyle.Primary)
+      const leaveButton = new ButtonBuilder()
+        .setCustomId(`leave_cw_${cwName}`)
+        .setLabel('Покинуть')
+        .setStyle(ButtonStyle.Danger)
+
+      actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        joinButton,
+        leaveButton,
+      )
+    }
+
+    const embed = createCWEmbed(cwName, cw.game, cw.players)
+    await interaction.update({ embeds: [embed], components: [actionRow] })
   }
 
   if (customId.startsWith('leave_cw_')) {
-    const cw = activeCWs.get(channelId)
-    if (!cw)
-      return interaction.reply({ content: 'Сбор не найден.', ephemeral: true })
-
     if (!cw.players.includes(user.username)) {
       return interaction.reply({ content: 'Вы не записаны!', ephemeral: true })
     }
 
     cw.players.push(user.username)
-    cw.players = cw.players.filter(player => player !== user.username)
+    cw.players = cw.players.filter((player) => player !== user.username)
 
-    const embed = createCWEmbed(cw.game, cw.players)
+    const embed = createCWEmbed(cwName, cw.game, cw.players)
     await interaction.update({ embeds: [embed] })
+  }
+
+  if (customId.startsWith('start_cw_')) {
+    const playersSorted = [...cw.players].sort(
+      (a, b) => ratings[b] || 1000 - ratings[a] || 1000,
+    )
+    const team1 = playersSorted.filter((_, i) => i % 2 === 0)
+    const team2 = playersSorted.filter((_, i) => i % 2 !== 0)
+    if (!guild) return
+
+    const category = await guild.channels.create({
+      name: `${cwName}`,
+      type: ChannelType.GuildCategory,
+    })
+
+    const team1Channel = await guild.channels.create({
+      name: 'Команда 1',
+      type: ChannelType.GuildVoice,
+      parent: category.id,
+    })
+
+    const team2Channel = await guild.channels.create({
+      name: 'Команда 2',
+      type: ChannelType.GuildVoice,
+      parent: category.id,
+    })
+
+    for (const player of team1) {
+      const member = guild.members.cache.find((m) => m.user.username === player)
+      if (member && member.voice.channel)
+        await member.voice.setChannel(team1Channel)
+    }
+
+    for (const player of team2) {
+      const member = guild.members.cache.find((m) => m.user.username === player)
+      if (member && member.voice.channel)
+        await member.voice.setChannel(team2Channel)
+    }
+
+    const startButton = new ButtonBuilder()
+      .setCustomId(`start_cw_${cwName}`)
+      .setLabel('Начать CW')
+      .setStyle(ButtonStyle.Success)
+      .setDisabled(true)
+    const leaveButton = new ButtonBuilder()
+      .setCustomId(`leave_cw_${cwName}`)
+      .setLabel('Покинуть')
+      .setStyle(ButtonStyle.Danger)
+      .setDisabled(true)
+
+    const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      startButton,
+      leaveButton,
+    )
+
+    const embed = createCWEmbed(cwName, cw.game, cw.players)
+    await interaction.update({
+      embeds: [embed],
+      components: [actionRow],
+      content: 'CW началась! Каналы созданы и игроки распределены.',
+    })
   }
 }
 
-export { handleStartCW, handleButtonClick }
+function isUserInAnyCW(username: string): boolean {
+  for (const [, cw] of activeCWs) {
+    if (cw.players.includes(username)) {
+      return true
+    }
+  }
+  return false
+}
+
+export { handleStartCW, handleButtonClick, createCWEmbed }

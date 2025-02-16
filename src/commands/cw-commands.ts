@@ -1,9 +1,13 @@
-import { APIApplicationCommandOption, ApplicationCommandOptionType, RESTPostAPIApplicationCommandsJSONBody } from "discord.js";
-import { GamesEnum } from "../constants/games.enum";
+import {
+  APIApplicationCommandOption,
+  ApplicationCommandOptionType,
+  RESTPostAPIApplicationCommandsJSONBody,
+} from 'discord.js'
+import { GamesEnum } from '../constants/games.enum'
 
 const cwCommands: RESTPostAPIApplicationCommandsJSONBody = {
   name: 'cw',
-  description: 'brigadir commands',
+  description: 'cw commands',
   options: <APIApplicationCommandOption[]>[
     {
       type: ApplicationCommandOptionType.Subcommand,
@@ -19,6 +23,12 @@ const cwCommands: RESTPostAPIApplicationCommandsJSONBody = {
             name: game.toUpperCase(),
             value: game,
           })),
+        },
+        {
+          type: ApplicationCommandOptionType.String,
+          name: 'cwname',
+          description: 'cw name',
+          required: true,
         },
       ],
     },
@@ -43,8 +53,21 @@ const cwCommands: RESTPostAPIApplicationCommandsJSONBody = {
       type: ApplicationCommandOptionType.Subcommand,
       name: 'end',
       description: 'end cw',
+      options: <APIApplicationCommandOption[]>[
+        {
+          type: ApplicationCommandOptionType.String,
+          name: 'cwname',
+          description: 'cw name',
+          required: true,
+        },
+      ],
+    },
+    {
+      type: ApplicationCommandOptionType.Subcommand,
+      name: 'list',
+      description: 'list of active cws',
     },
   ],
 }
 
-export default cwCommands;
+export default cwCommands
