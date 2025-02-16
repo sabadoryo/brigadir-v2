@@ -6,6 +6,18 @@ export default async function registerSlashCommands() {
     {
       name: 'ping',
       description: 'Replies with Pong!',
+      options: [
+        {
+          type: 1,
+          name: 'piska',
+          description: 'kekka',
+        },
+        {
+          type: 1,
+          name: 'lolka',
+          description: 'kekka',
+        },
+      ],
     },
   ]
 

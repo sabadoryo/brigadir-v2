@@ -16,7 +16,10 @@ async function initBot() {
     if (!interaction.isChatInputCommand()) return
 
     if (interaction.commandName === 'ping') {
-      await interaction.reply('Pong!')
+      console.log(interaction.options.getSubcommand())
+      if (interaction.options.getSubcommand() === 'piska') {
+        await interaction.reply('Pong!')
+      }
     }
   })
 
