@@ -7,6 +7,7 @@ dotenv.config() // Load environment variables
 const envSchema = z.object({
   DISCORD_CLIENT_ID: z.string().nonempty(),
   DISCORD_BOT_TOKEN: z.string().nonempty(),
+  MONGO_URL: z.string().nonempty(),
 })
 
 // Validate and extract env variables

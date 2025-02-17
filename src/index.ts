@@ -4,8 +4,11 @@ import registerSlashCommands from './register-slash-commands'
 import { handleButtonClick, handleStartCW } from './commands-handlers/start-cw'
 import { handleEndCW } from './commands-handlers/end-cw'
 import { handleListCW, handleListCWButtons } from './commands-handlers/list-cw'
+import connectDB from './database/db'
+import UserModel from './database/schemas/User'
 
 async function initBot() {
+  await connectDB()
   await registerSlashCommands()
 
   const client = new Client({
