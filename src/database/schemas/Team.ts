@@ -3,7 +3,7 @@ import { GamesEnum } from '../../constants/games.enum'
 
 const TeamSchema = new mongoose.Schema(
   {
-    game: { type: GamesEnum, required: true },
+    game: { type: String, enum: GamesEnum, required: true },
     name: { type: String, required: true },
     players: [
       { type: mongoose.Schema.Types.ObjectId, ref: 'Player', required: true },

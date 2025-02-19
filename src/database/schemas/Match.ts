@@ -4,7 +4,7 @@ import { MatchStatusesEnum } from '../../constants/match-statuses.enum'
 
 const MatchSchema = new mongoose.Schema(
   {
-    game: { type: GamesEnum, required: true },
+    game: { type: String, enum: GamesEnum, required: true },
     hostId: {type: mongoose.Schema.Types.ObjectId, ref: 'Player', required: true},
     playerAmount: {type: Number, required: true},
     teamAId: {
@@ -19,7 +19,7 @@ const MatchSchema = new mongoose.Schema(
     },
     winnerTeamId: { type: mongoose.Schema.Types.ObjectId, ref: 'Team' },
     startTime: { type: Date },
-    status: { type: MatchStatusesEnum, required: true },
+    status: { type: String, enum: MatchStatusesEnum, required: true },
     endTime: { type: Date },
     duration: { type: Number },
   },

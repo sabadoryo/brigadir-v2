@@ -4,9 +4,9 @@ import { GamesEnum } from '../../constants/games.enum'
 const PlayerSchema = new mongoose.Schema(
   {
     discordId: { type: String, required: true, unique: true },
-    username: { type: String, default: '' },
+    username: { type: String, required: true, unique: true},
     games: [{
-      name: { type: GamesEnum, required: true },
+      name: { type: String, enum: GamesEnum, required: true },
       rating: { type: Number, default: 1000 },
       matchesPlayed: { type: Number, default: 0 },
     }]

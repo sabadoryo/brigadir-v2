@@ -8,7 +8,7 @@ const MatchLogSchema = new mongoose.Schema(
       ref: 'Match',
       required: true,
     },
-    game: { type: GamesEnum, required: true },
+    game: { type: String, enum: GamesEnum, required: true },
     players: [
       {
         player: {
