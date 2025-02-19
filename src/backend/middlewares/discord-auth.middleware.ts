@@ -8,11 +8,7 @@ async function discordAuthMiddleware(
   next: express.NextFunction,
 ) {
   try {
-    console.log(req.headers)
-    console.log(req.headers.authorization)
     const token = req.headers.authorization?.split(' ')[1]
-    console.log('shit')
-    console.log(token)
     if (!token) {
       return res.status(401).json({ error: 'Token is required' })
     }

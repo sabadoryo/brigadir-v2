@@ -3,7 +3,8 @@ import { config } from '../config';
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(config.MONGO_URL);
+    await mongoose.connect(config.MONGO_URL, {autoCreate: true});
+
     console.log('Connected to MongoDB');
   } catch (error) {
     console.error('MongoDB connection error:', error);

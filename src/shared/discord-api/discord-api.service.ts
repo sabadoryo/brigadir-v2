@@ -8,7 +8,8 @@ async function getMe(token: string) {
         Authorization: `Bearer ${token}`,
       },
     })
-    return discordResponse.data.user
+    console.log(discordResponse.data)
+    return discordResponse.data
   } catch (error) {
     console.log(error)
     throw error
