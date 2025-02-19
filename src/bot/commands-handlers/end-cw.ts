@@ -3,7 +3,7 @@ import {
   ChatInputCommandInteraction,
   Collection,
 } from 'discord.js'
-import activeCWs from '../storage/active-cws'
+import activeCWs from '../../storage/active-cws'
 
 async function handleEndCW(interaction: ChatInputCommandInteraction) {
   await interaction.deferReply({ ephemeral: false })

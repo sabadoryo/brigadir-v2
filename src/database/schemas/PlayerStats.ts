@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import { GamesEnum } from '../../constants/games.enum'
 
 const PlayerStatsSchema = new mongoose.Schema({
-  player: { type: mongoose.Schema.Types.ObjectId, ref: "Player", required: true },
+  playerId: { type: mongoose.Schema.Types.ObjectId, ref: "Player", required: true },
   game: { type: GamesEnum, required: true },
   matchesPlayed: { type: Number, default: 0 },
   wins: { type: Number, default: 0 },

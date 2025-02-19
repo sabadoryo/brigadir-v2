@@ -1,10 +1,10 @@
 import { Client, Events, GatewayIntentBits } from 'discord.js'
-import { config } from './config'
+import { config } from '../config'
 import registerSlashCommands from './register-slash-commands'
 import { handleButtonClick, handleStartCW } from './commands-handlers/start-cw'
 import { handleEndCW } from './commands-handlers/end-cw'
 import { handleListCW, handleListCWButtons } from './commands-handlers/list-cw'
-import connectDB from './database/db'
+import connectDB from '../database/db'
 
 async function initBot() {
   await connectDB()

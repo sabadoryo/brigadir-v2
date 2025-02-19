@@ -3,7 +3,7 @@ import {
   ApplicationCommandOptionType,
   RESTPostAPIApplicationCommandsJSONBody,
 } from 'discord.js'
-import { GamesEnum } from '../constants/games.enum'
+import { GamesEnum } from '../../constants/games.enum'
 
 const settingsCommands: RESTPostAPIApplicationCommandsJSONBody = {
   name: 'settings',

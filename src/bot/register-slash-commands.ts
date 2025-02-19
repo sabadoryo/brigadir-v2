@@ -1,6 +1,6 @@
 import { REST, Routes } from 'discord.js'
 import 'dotenv/config'
-import { config } from './config'
+import { config } from '../config'
 import commands from './commands'
 
 export default async function registerSlashCommands() {

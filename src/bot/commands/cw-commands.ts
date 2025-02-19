@@ -3,23 +3,40 @@ import {
   ApplicationCommandOptionType,
   RESTPostAPIApplicationCommandsJSONBody,
 } from 'discord.js'
-import { GamesEnum } from '../constants/games.enum'
+import { GamesEnum } from '../../constants/games.enum'
 
-const statsCommands: RESTPostAPIApplicationCommandsJSONBody = {
-  name: 'stats',
-  description: 'stats commands',
+const cwCommands: RESTPostAPIApplicationCommandsJSONBody = {
+  name: 'cw',
+  description: 'cw commands',
   options: <APIApplicationCommandOption[]>[
     {
       type: ApplicationCommandOptionType.Subcommand,
-      name: 'rating',
-      description: 'check player rating',
+      name: 'start',
+      description: 'start cw',
       options: <APIApplicationCommandOption[]>[
         {
-          type: ApplicationCommandOptionType.User, // Выбор пользователя
-          name: 'user',
-          description: 'Выберите пользователя',
+          type: ApplicationCommandOptionType.String,
+          name: 'game',
+          description: 'Выберите игру',
+          required: true,
+          choices: Object.values(GamesEnum).map((game) => ({
+            name: game.toUpperCase(),
+            value: game,
+          })),
+        },
+        {
+          type: ApplicationCommandOptionType.String,
+          name: 'cwname',
+          description: 'cw name',
           required: true,
         },
+      ],
+    },
+    {
+      type: ApplicationCommandOptionType.Subcommand,
+      name: 'cancel',
+      description: 'cancel cw',
+      options: <APIApplicationCommandOption[]>[
         {
           type: ApplicationCommandOptionType.String,
           name: 'game',
@@ -34,39 +51,23 @@ const statsCommands: RESTPostAPIApplicationCommandsJSONBody = {
     },
     {
       type: ApplicationCommandOptionType.Subcommand,
-      name: 'my_rating',
-      description: 'check my rating',
+      name: 'end',
+      description: 'end cw',
       options: <APIApplicationCommandOption[]>[
         {
           type: ApplicationCommandOptionType.String,
-          name: 'game',
-          description: 'Выберите игру',
+          name: 'cwname',
+          description: 'cw name',
           required: true,
-          choices: Object.values(GamesEnum).map((game) => ({
-            name: game.toUpperCase(),
-            value: game,
-          })),
         },
       ],
     },
     {
       type: ApplicationCommandOptionType.Subcommand,
-      name: 'leaderboard',
-      description: 'check leaderboard',
-      options: <APIApplicationCommandOption[]>[
-        {
-          type: ApplicationCommandOptionType.String,
-          name: 'game',
-          description: 'Выберите игру',
-          required: true,
-          choices: Object.values(GamesEnum).map((game) => ({
-            name: game.toUpperCase(),
-            value: game,
-          })),
-        },
-      ],
+      name: 'list',
+      description: 'list of active cws',
     },
   ],
 }
 
-export default statsCommands
+export default cwCommands

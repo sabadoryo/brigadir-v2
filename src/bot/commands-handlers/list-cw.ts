@@ -6,7 +6,7 @@ import {
   ActionRowBuilder,
   Interaction,
 } from 'discord.js'
-import activeCWs from '../storage/active-cws'
+import activeCWs from '../../storage/active-cws'
 import { createCWEmbed } from './start-cw'
 
 async function handleListCW(interaction: ChatInputCommandInteraction) {

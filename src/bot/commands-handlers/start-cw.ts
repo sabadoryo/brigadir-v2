@@ -7,8 +7,8 @@ import {
   Interaction,
   ChannelType,
 } from 'discord.js'
-import ratings from '../constants/players-rating'
-import activeCWs from '../storage/active-cws'
+import ratings from '../../constants/players-rating'
+import activeCWs from '../../storage/active-cws'
 
 const MAX_PLAYERS = 2
 
