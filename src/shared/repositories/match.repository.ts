@@ -10,7 +10,7 @@ async function createMatch(data: CreateMatchDto) {
 }
 
 async function findAllMatches() {
-  return MatchModel.find({})
+  return MatchModel.find().populate('hostId').exec();
 }
 
 async function findMatchById(id: string) {

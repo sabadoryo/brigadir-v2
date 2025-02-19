@@ -10,6 +10,6 @@ const PlayerStatsSchema = new mongoose.Schema({
   winRate: { type: Number, default: 0 },
 });
 
-const PlayerStatsModel = mongoose.model('User', PlayerStatsSchema)
+const PlayerStatsModel = mongoose.model('PlayerStats', PlayerStatsSchema)
 
 export default PlayerStatsModel

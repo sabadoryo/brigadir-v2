@@ -8,15 +8,19 @@ import connectDB from '../database/db'
 
 const app = express()
 
+const apiRouter = express.Router()
 
-app.use(cors({
-  allowedHeaders: ['Authorization', 'Content-Type']
-}))
+app.use(
+  cors({
+    allowedHeaders: ['Authorization', 'Content-Type'],
+  }),
+)
 
 app.use(express.json())
-// app.use(discordAuthMiddlewareTyped)
-app.use('/matches', matchRouter)
-app.use('/players', playerRouter)
+app.use(discordAuthMiddlewareTyped)
+apiRouter.use('/matches', matchRouter)
+apiRouter.use('/players', playerRouter)
+app.use('/api', apiRouter)
 
 app.listen(config.PORT, async () => {
   await connectDB()

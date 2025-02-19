@@ -12,13 +12,11 @@ async function discordAuthMiddleware(
     if (!token) {
       return res.status(401).json({ error: 'Token is required' })
     }
-    console.log('shit2')
 
     const user = await getMe(token)
     if (!user) {
       return res.status(401).json({ error: 'Invalid token' })
     }
-    console.log('uspeh')
     req.user = user
     return next()
   } catch (error) {

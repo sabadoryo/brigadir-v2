@@ -11,7 +11,6 @@ const matchRouter = Router()
 
 matchRouter.get('/', async (req: Request, res: Response) => {
   const matches = await getAllMatches()
-  console.log('uspeh 2')
   res.json(matches)
 })
 

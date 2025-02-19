@@ -1,13 +1,12 @@
 import { Request, Response, Router } from 'express'
+import { getPlayerByUsername } from './player.service'
 
 const playerRouter = Router()
 
-playerRouter.get('/', (req: Request, res: Response) => {
-  res.send('Hello from player')
-})
+playerRouter.get('/:username', async (req: Request, res: Response) => {
+  const player = await getPlayerByUsername(req.params.username)
 
-playerRouter.get('/:id', (req: Request, res: Response) => {
-  res.send('Hello from player')
+  res.json(player)
 })
 
 export default playerRouter

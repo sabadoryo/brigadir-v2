@@ -5,16 +5,32 @@ async function createPlayer(data: CreatePlayerDto) {
   return PlayerModel.create(data)
 }
 
-async function getOrCreateByUsername(username: string) {
-  const player = await PlayerModel.findOne({ username })
+async function getOrCreatePlayerByUsername(data: CreatePlayerDto) {
+  const player = await findPlayerByUsername(data.username)
+  console.log(player)
+  console.log(data)
+  if (player) {
+    return player
+  }
+  return await createPlayer(data)
 }
 
-async function getAllPlayers() {
+async function findAllPlayers() {
   return await PlayerModel.find()
 }
 
-async function getPlayerById(id: string) {
+async function findPlayerById(id: string) {
   return await PlayerModel.findById(id)
 }
 
-export { createPlayer, getOrCreateByUsername, getAllPlayers, getPlayerById }
+async function findPlayerByUsername(username: string) {
+  return await PlayerModel.findOne({ username })
+}
+
+export {
+  createPlayer,
+  getOrCreatePlayerByUsername,
+  findAllPlayers,
+  findPlayerById,
+  findPlayerByUsername,
+}
