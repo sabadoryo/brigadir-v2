@@ -1,6 +1,7 @@
-import { MatchStatusesEnum } from "../../../constants/match-statuses.enum"
+import { MatchStatusesEnum } from '../../../constants/match-statuses.enum'
 
 export interface ChangeMatchStatusDto {
   matchId: string
   status: MatchStatusesEnum
+  hostId: string
 }

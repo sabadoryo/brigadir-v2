@@ -5,8 +5,8 @@ const PlayerSchema = new mongoose.Schema(
   {
     discordId: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },
-    avatar: { type: String },
-    games: [
+    avatar: { type: String, require: false },
+    gamesProfile: [
       {
         name: { type: String, enum: GamesEnum, required: true },
         rating: { type: Number, default: 1000 },

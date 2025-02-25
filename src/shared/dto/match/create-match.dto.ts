@@ -1,6 +1,8 @@
+import { GamesEnum } from '../../../constants/games.enum'
+
 export interface CreateMatchDto {
   name: string
   hostId: string
   playerAmount: number
-  game: string
+  game: GamesEnum
 }

@@ -1,9 +1,7 @@
-import express from 'express'
+import express, { Request } from 'express'
 import { getMe } from '../../shared/discord-api/discord-api.service'
-import { RequestWithUser } from '../dto/request-with-user.dto'
-
 async function discordAuthMiddleware(
-  req: RequestWithUser,
+  req: Request,
   res: express.Response,
   next: express.NextFunction,
 ) {

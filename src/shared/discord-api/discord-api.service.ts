@@ -18,8 +18,7 @@ async function getMe(token: string) {
       discordId: discordResponse.data.id,
       avatar: discordResponse.data.avatar,
     })
-    console.log(user)
-    return discordResponse.data
+    return user
   } catch (error) {
     console.log(error)
     throw error

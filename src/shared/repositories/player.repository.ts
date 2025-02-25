@@ -29,8 +29,8 @@ async function findPlayerByUsername(username: string) {
 
 export {
   createPlayer,
-  getOrCreatePlayerByUsername,
   findAllPlayers,
   findPlayerById,
   findPlayerByUsername,
+  getOrCreatePlayerByUsername,
 }

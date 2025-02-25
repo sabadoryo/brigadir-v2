@@ -72,9 +72,9 @@ async function setMatchStatus(data: ChangeMatchStatusDto) {
 }
 
 export {
-  hostMatch,
   getAllMatches,
   getMatchById,
+  hostMatch,
   joinMatch,
   leaveMatch,
   setMatchStatus,

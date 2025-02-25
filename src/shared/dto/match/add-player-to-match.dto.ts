@@ -1,4 +1,4 @@
 export interface AddPlayerToMatchDto {
   matchId: string
-  username: string
+  playerId: string
 }
