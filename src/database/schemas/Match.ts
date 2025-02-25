@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import { GamesEnum } from '../../constants/games.enum'
 import { MatchStatusesEnum } from '../../constants/match-statuses.enum'
+import { DistributionTypesEnum } from '../../constants/distribution-types.enum'
 
 const MatchSchema = new mongoose.Schema(
   {
@@ -10,6 +11,7 @@ const MatchSchema = new mongoose.Schema(
       ref: 'Player',
       required: true,
     },
+    distributionType: { type: String, enum: DistributionTypesEnum, required: true },
     playerAmount: { type: Number, required: true },
     teamA: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],
     teamB: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],
