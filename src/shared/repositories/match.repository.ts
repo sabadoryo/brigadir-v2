@@ -4,14 +4,33 @@ import MatchModel from '../../database/schemas/Match'
 import { AddPlayerToMatchDto } from '../dto/match/add-player-to-match.dto'
 import { ChangeMatchStatusDto } from '../dto/match/change-match-status.dto'
 import { CreateMatchDto } from '../dto/match/create-match.dto'
+import { GetMatchesQueryDto } from '../dto/match/get-matches-query.dto'
 import { RemovePlayerFromMatchDto } from '../dto/match/remove-player-from-match.dto'
 
 async function createMatch(data: CreateMatchDto) {
   return MatchModel.create({ ...data, status: MatchStatusesEnum.CREATED })
 }
 
-async function findAllMatches() {
-  return MatchModel.find().populate('hostId').exec()
+async function findAllMatches(query: GetMatchesQueryDto) {
+  const filter: any = {}
+
+  if (query.hostId) {
+    filter['hostId'] = query.hostId
+  }
+
+  if (query.status) {
+    filter['status'] = query.status
+  }
+
+  return MatchModel.find(
+    filter,
+    {},
+    {
+      skip: query.skip,
+      limit: query.limit,
+      populate: 'hostId',
+    },
+  ).exec()
 }
 
 async function findMatchById(id: string) {

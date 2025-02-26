@@ -1,6 +1,7 @@
 import { AddPlayerToMatchDto } from '../../shared/dto/match/add-player-to-match.dto'
 import { ChangeMatchStatusDto } from '../../shared/dto/match/change-match-status.dto'
 import { CreateMatchDto } from '../../shared/dto/match/create-match.dto'
+import { GetMatchesQueryDto } from '../../shared/dto/match/get-matches-query.dto'
 import { RemovePlayerFromMatchDto } from '../../shared/dto/match/remove-player-from-match.dto'
 import {
   addPlayerToMatch,
@@ -21,9 +22,9 @@ async function hostMatch(data: CreateMatchDto) {
   }
 }
 
-async function getAllMatches() {
+async function getAllMatches(query: GetMatchesQueryDto) {
   try {
-    const matches = await findAllMatches()
+    const matches = await findAllMatches(query)
     return matches
   } catch (error) {
     console.log(error)
