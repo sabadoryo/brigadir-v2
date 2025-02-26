@@ -4,9 +4,9 @@ import { config } from '../config'
 import connectDB from '../database/db'
 import { PlayerDto } from '../shared/dto/player/player.dto'
 import matchRouter from './match/match.controller'
-import { discordAuthMiddlewareTyped } from './middlewares/discord-auth.middleware'
+import discordAuthMiddleware from './middlewares/discord-auth.middleware'
 import { errorHandlerTyped } from './middlewares/error-handler.middleware'
-import { sanitizePaginationQueryParamsMiddlewareTyped } from './middlewares/sanitize-pagination-query-params.middleware'
+import sanitizePaginationQueryParamsMiddleware from './middlewares/sanitize-pagination-query-params.middleware'
 import playerRouter from './player/player.controller'
 
 declare global {
@@ -33,8 +33,8 @@ app.use(
 )
 
 app.use(express.json())
-app.use(discordAuthMiddlewareTyped)
-app.use(sanitizePaginationQueryParamsMiddlewareTyped)
+app.use(discordAuthMiddleware)
+app.use(sanitizePaginationQueryParamsMiddleware)
 
 apiRouter.use('/matches', matchRouter)
 apiRouter.use('/players', playerRouter)

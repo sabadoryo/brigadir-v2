@@ -1,27 +1,28 @@
-import express, { Request } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { getMe } from '../../shared/discord-api/discord-api.service'
+import CustomHttpError from '../errors/custom-http-error'
 async function discordAuthMiddleware(
   req: Request,
-  res: express.Response,
-  next: express.NextFunction,
+  res: Response,
+  next: NextFunction,
 ) {
   try {
     const token = req.headers.authorization?.split(' ')[1]
     if (!token) {
-      return res.status(401).json({ error: 'Token is required' })
+      return next(new CustomHttpError('Token is required', 401))
     }
 
     const user = await getMe(token)
     if (!user) {
-      return res.status(401).json({ error: 'Invalid token' })
+      return next(new CustomHttpError('Invalid token', 401))
     }
+
     req.user = user
     return next()
   } catch (error) {
     console.log(error)
-    return res.status(500).json({ error: 'Internal Server Error' })
+    return next(new CustomHttpError('Server auth error', 500))
   }
 }
 
-export const discordAuthMiddlewareTyped =
-  discordAuthMiddleware as express.RequestHandler
+export default discordAuthMiddleware

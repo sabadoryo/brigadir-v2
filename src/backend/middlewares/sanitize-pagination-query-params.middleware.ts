@@ -30,5 +30,4 @@ async function sanitizePaginationQueryParamsMiddleware(
   return next()
 }
 
-export const sanitizePaginationQueryParamsMiddlewareTyped =
-  sanitizePaginationQueryParamsMiddleware as express.RequestHandler
+export default sanitizePaginationQueryParamsMiddleware
