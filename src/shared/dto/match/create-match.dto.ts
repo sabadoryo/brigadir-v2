@@ -1,3 +1,4 @@
+import { DistributionTypesEnum } from '../../../constants/distribution-types.enum'
 import { GamesEnum } from '../../../constants/games.enum'
 
 export interface CreateMatchDto {
@@ -5,4 +6,5 @@ export interface CreateMatchDto {
   hostId: string
   playerAmount: number
   game: GamesEnum
+  distributionType: DistributionTypesEnum
 }

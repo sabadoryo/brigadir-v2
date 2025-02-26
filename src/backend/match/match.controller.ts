@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express'
 import { query } from 'express-validator'
+import { DistributionTypesEnum } from '../../constants/distribution-types.enum'
 import { MatchStatusesEnum } from '../../constants/match-statuses.enum'
 import { GetMatchesQueryDto } from '../../shared/dto/match/get-matches-query.dto'
 import {
@@ -20,6 +21,10 @@ matchRouter.get(
       .notEmpty()
       .isIn(Object.values(MatchStatusesEnum)),
     query('hostId').optional().notEmpty().isHexadecimal(),
+    query('distributionType')
+      .optional()
+      .notEmpty()
+      .isIn(Object.values(DistributionTypesEnum)),
   ]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {

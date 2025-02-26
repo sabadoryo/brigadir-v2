@@ -22,6 +22,10 @@ async function findAllMatches(query: GetMatchesQueryDto) {
     filter['status'] = query.status
   }
 
+  if (query.distributionType) {
+    filter['distributionType'] = query.distributionType
+  }
+
   return MatchModel.find(
     filter,
     {},
