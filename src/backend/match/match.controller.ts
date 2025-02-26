@@ -63,7 +63,7 @@ matchRouter.post(
     try {
       const match = await addPlayerToMatch({
         matchId: req.params.id,
-        playerId: req.body.playerId,
+        playerId: req.user._id.toString(),
       })
       res.json(match)
     } catch (error) {
@@ -78,7 +78,7 @@ matchRouter.post(
     try {
       const match = await removePlayerFromMatch({
         matchId: req.params.id,
-        playerId: req.body.playerId,
+        playerId: req.user._id.toString(),
       })
       res.json(match)
     } catch (error) {

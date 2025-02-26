@@ -1,8 +1,10 @@
+import { DistributionTypesEnum } from '../../../constants/distribution-types.enum'
 import { GamesEnum } from '../../../constants/games.enum'
 
 export interface MatchDto {
   game: GamesEnum
   hostId: string
+  distributionType: DistributionTypesEnum
   playerAmount: number
   teamA: string[]
   teamB: string[]
