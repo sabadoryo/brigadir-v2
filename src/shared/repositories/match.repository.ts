@@ -6,6 +6,7 @@ import { ChangeMatchStatusDto } from '../dto/match/change-match-status.dto'
 import { CreateMatchDto } from '../dto/match/create-match.dto'
 import { GetMatchesQueryDto } from '../dto/match/get-matches-query.dto'
 import { RemovePlayerFromMatchDto } from '../dto/match/remove-player-from-match.dto'
+import { StartMatchDto } from '../dto/match/start-match.dto'
 
 async function createMatch(data: CreateMatchDto) {
   return MatchModel.create({ ...data, status: MatchStatusesEnum.CREATED })
@@ -94,6 +95,8 @@ async function removePlayerFromMatch(data: RemovePlayerFromMatchDto) {
     },
   )
 }
+
+async function startMatch(data: StartMatchDto) {}
 
 async function changeMatchStatus(data: ChangeMatchStatusDto) {
   const match = await MatchModel.findById(data.matchId).orFail(

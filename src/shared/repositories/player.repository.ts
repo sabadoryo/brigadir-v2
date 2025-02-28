@@ -1,3 +1,5 @@
+import mongoose from 'mongoose'
+import CustomHttpError from '../../backend/errors/custom-http-error'
 import PlayerModel from '../../database/schemas/Player'
 import { CreatePlayerDto } from '../dto/player/create-player.dto'
 
@@ -19,12 +21,14 @@ async function findAllPlayers() {
   return await PlayerModel.find()
 }
 
-async function findPlayerById(id: string) {
-  return await PlayerModel.findById(id)
-}
-
 async function findPlayerByUsername(username: string) {
   return await PlayerModel.findOne({ username })
+}
+
+async function findPlayerById(_id: mongoose.Types.ObjectId) {
+  return PlayerModel.findById(_id).orFail(
+    new CustomHttpError('Player not found', 404),
+  )
 }
 
 export {

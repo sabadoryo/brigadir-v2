@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express'
-import { query } from 'express-validator'
+import { body, query } from 'express-validator'
 import { DistributionTypesEnum } from '../../constants/distribution-types.enum'
+import { GamesEnum } from '../../constants/games.enum'
 import { MatchStatusesEnum } from '../../constants/match-statuses.enum'
 import { GetMatchesQueryDto } from '../../shared/dto/match/get-matches-query.dto'
 import {
@@ -40,9 +41,26 @@ matchRouter.get(
 
 matchRouter.post(
   '/',
+  requestValidationMiddleware([
+    body('name').notEmpty().exists().isLength({ min: 3, max: 50 }),
+    body('game').notEmpty().exists().isIn(Object.values(GamesEnum)),
+    body('distributionType')
+      .notEmpty()
+      .exists()
+      .isIn(Object.values(DistributionTypesEnum)),
+    body('playerAmount')
+      .notEmpty()
+      .exists()
+      .isInt()
+      .custom((val) => val > 1)
+      .customSanitizer(Number),
+  ]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const matches = await hostMatch(req.body)
+      const matches = await hostMatch({
+        ...req.body,
+        hostId: req.user._id.toString(),
+      })
       res.json(matches)
     } catch (error) {
       next(error)

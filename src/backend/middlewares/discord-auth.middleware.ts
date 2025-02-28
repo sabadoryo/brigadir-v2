@@ -21,7 +21,7 @@ async function discordAuthMiddleware(
     return next()
   } catch (error) {
     console.log(error)
-    return next(new CustomHttpError('Server auth error', 500))
+    return next(new CustomHttpError('Server auth error', 401))
   }
 }
 

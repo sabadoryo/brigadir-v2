@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
+import { DistributionTypesEnum } from '../../constants/distribution-types.enum'
 import { GamesEnum } from '../../constants/games.enum'
 import { MatchStatusesEnum } from '../../constants/match-statuses.enum'
-import { DistributionTypesEnum } from '../../constants/distribution-types.enum'
 
 const MatchSchema = new mongoose.Schema(
   {
@@ -11,7 +11,11 @@ const MatchSchema = new mongoose.Schema(
       ref: 'Player',
       required: true,
     },
-    distributionType: { type: String, enum: DistributionTypesEnum, required: true },
+    distributionType: {
+      type: String,
+      enum: DistributionTypesEnum,
+      required: true,
+    },
     playerAmount: { type: Number, required: true },
     teamA: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],
     teamB: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],
@@ -21,6 +25,7 @@ const MatchSchema = new mongoose.Schema(
     endTime: { type: Date },
     duration: { type: Number },
     players: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],
+    name: { type: String, require: true },
   },
   { timestamps: true },
 )
